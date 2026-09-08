@@ -1,0 +1,394 @@
+{
+  "info": {
+    "_postman_id": "agrichain-connect-backend-v1",
+    "name": "AgriChain Connect Backend API (Bruno & Postman Collection)",
+    "description": "Comprehensive API collection for AgriChain Connect covering all 6 supply chain roles, auth, listings, negotiations, orders, order status lifecycle, payments, escrow, cash dual-confirmation, trust score 4 pillars, AI route optimization, adaptive discovery, and ₹100 value distribution.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api", "type": "string" },
+    { "key": "farmerToken", "value": "", "type": "string" },
+    { "key": "aggregatorToken", "value": "", "type": "string" },
+    { "key": "retailerToken", "value": "", "type": "string" },
+    { "key": "listingId", "value": "", "type": "string" },
+    { "key": "threadId", "value": "", "type": "string" },
+    { "key": "orderId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Health & Status",
+      "item": [
+        {
+          "name": "Health Check [Positive]",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication & Onboarding (Section 11)",
+      "item": [
+        {
+          "name": "Register Farmer [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ramesh Patel\",\n  \"username\": \"farmer_ramesh_test\",\n  \"password\": \"FarmerPass123!\",\n  \"mobile_number\": \"+919876543210\",\n  \"role\": \"farmer\",\n  \"preferred_language\": \"hi\",\n  \"latitude\": 28.7041,\n  \"longitude\": 77.1025,\n  \"location_address\": \"Sonipat, Haryana\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Retailer (Buy-Only) [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Modern Grocery Mart\",\n  \"username\": \"retailer_modern_test\",\n  \"password\": \"RetailerPass123!\",\n  \"mobile_number\": \"+919876543215\",\n  \"role\": \"final_retailer\",\n  \"preferred_language\": \"en\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Duplicate Username [Negative]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Duplicate User\",\n  \"username\": \"farmer_ramesh_test\",\n  \"password\": \"Pass123!\",\n  \"mobile_number\": \"+919999999999\",\n  \"role\": \"farmer\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Invalid Role (Free Text) [Negative]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Invalid Role\",\n  \"username\": \"invalid_role_test\",\n  \"password\": \"Pass123!\",\n  \"mobile_number\": \"+919999999999\",\n  \"role\": \"unauthorized_broker\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Farmer [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"farmer_ramesh_test\",\n  \"password\": \"FarmerPass123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Wrong Password (Generic Error) [Negative]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"farmer_ramesh_test\",\n  \"password\": \"WrongPass999!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Non-Existent User (No Enumeration) [Negative]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"ghost_user_does_not_exist\",\n  \"password\": \"Pass123!\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Role-Specific Listings (Section 4)",
+      "item": [
+        {
+          "name": "Farmer Creates Listing [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{farmerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/listings", "host": ["{{baseUrl}}"], "path": ["listings"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"crop_type\": \"Sharbati Wheat\",\n  \"category\": \"Grains & Cereals\",\n  \"quantity\": 100,\n  \"unit\": \"quintal\",\n  \"quality_grade\": \"Grade A\",\n  \"asking_price_per_unit\": 2300,\n  \"harvest_date\": \"2026-04-10\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Retailer Creates Listing [Negative - 403 Forbidden]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{retailerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/listings", "host": ["{{baseUrl}}"], "path": ["listings"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"crop_type\": \"Wheat Flour\",\n  \"category\": \"Grains\",\n  \"quantity\": 10,\n  \"asking_price_per_unit\": 3000\n}"
+            }
+          }
+        },
+        {
+          "name": "Browse Active Listings [Positive]",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/listings?category=Grains", "host": ["{{baseUrl}}"], "path": ["listings"], "query": [{ "key": "category", "value": "Grains" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Negotiation & Offers (Section 5.2)",
+      "item": [
+        {
+          "name": "Aggregator Initiates Negotiation [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{aggregatorToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/negotiations", "host": ["{{baseUrl}}"], "path": ["negotiations"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"listing_id\": \"{{listingId}}\",\n  \"proposed_price_per_unit\": 2200,\n  \"proposed_quantity\": 50,\n  \"message\": \"Can pick up tomorrow\",\n  \"expires_in_hours\": 12\n}"
+            }
+          }
+        },
+        {
+          "name": "Farmer Initiates Buy Negotiation [Negative - 403 Forbidden]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{farmerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/negotiations", "host": ["{{baseUrl}}"], "path": ["negotiations"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"listing_id\": \"{{listingId}}\",\n  \"proposed_price_per_unit\": 2000,\n  \"proposed_quantity\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Submit Counter-Offer [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{farmerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/negotiations/{{threadId}}/offers", "host": ["{{baseUrl}}"], "path": ["negotiations", "{{threadId}}", "offers"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"proposed_price_per_unit\": 2250,\n  \"proposed_quantity\": 50,\n  \"message\": \"Best price is 2250 for Grade A\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Accept Offer -> Generate Order [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{aggregatorToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/negotiations/{{threadId}}/accept", "host": ["{{baseUrl}}"], "path": ["negotiations", "{{threadId}}", "accept"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_method\": \"escrow_wallet\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Order Status Lifecycle (Section 12)",
+      "item": [
+        {
+          "name": "Get Order Tracking Timeline [Positive]",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{farmerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/orders/{{orderId}}/status-history", "host": ["{{baseUrl}}"], "path": ["orders", "{{orderId}}", "status-history"] }
+          }
+        },
+        {
+          "name": "Seller Updates Status to Packed [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{farmerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/orders/{{orderId}}/status", "host": ["{{baseUrl}}"], "path": ["orders", "{{orderId}}", "status"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"packed\",\n  \"notes\": \"Packed in sanitized jute bags\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Buyer Updates Status to Shipped [Negative - 403 Forbidden]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{aggregatorToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/orders/{{orderId}}/status", "host": ["{{baseUrl}}"], "path": ["orders", "{{orderId}}", "status"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shipped\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Buyer Confirms Delivery [Positive - Auto Releases Escrow]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{aggregatorToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/orders/{{orderId}}/status", "host": ["{{baseUrl}}"], "path": ["orders", "{{orderId}}", "status"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"delivered\",\n  \"notes\": \"Received and inspected at warehouse\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Payments, Escrow & Cash Confirmation (Section 5.1)",
+      "item": [
+        {
+          "name": "Seller Logs Cash Received [Positive]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{farmerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/payments/{{orderId}}/cash/log", "host": ["{{baseUrl}}"], "path": ["payments", "{{orderId}}", "cash", "log"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 112500,\n  \"date\": \"2026-09-08T18:00:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Buyer Logs Mismatched Cash [Edge Case - Status Mismatch]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{aggregatorToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/payments/{{orderId}}/cash/confirm", "host": ["{{baseUrl}}"], "path": ["payments", "{{orderId}}", "cash", "confirm"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 95000,\n  \"date\": \"2026-09-08T18:00:00Z\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Trust Score & 4 Pillars (Section 9)",
+      "item": [
+        {
+          "name": "Owner Checks Private Trust Score & 4 Pillars [Positive]",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{farmerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/trust-score/me", "host": ["{{baseUrl}}"], "path": ["trust-score", "me"] }
+          }
+        },
+        {
+          "name": "Counterparty Checks Public Aggregate Score [Positive]",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{aggregatorToken}}" }],
+            "url": { "raw": "{{baseUrl}}/trust-score/{{farmerToken}}", "host": ["{{baseUrl}}"], "path": ["trust-score", "{{farmerToken}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. AI Route Optimization Engine (Section 8)",
+      "item": [
+        {
+          "name": "Farmer Gets Route Recommendations [Positive]",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{farmerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/routes/recommendations?crop_name=Wheat&crop_category=Grains%20%26%20Cereals&quantity=100", "host": ["{{baseUrl}}"], "path": ["routes", "recommendations"] }
+          }
+        },
+        {
+          "name": "Retailer Gets Route Recommendations [Negative - 403 Forbidden]",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{retailerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/routes/recommendations", "host": ["{{baseUrl}}"], "path": ["routes", "recommendations"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Adaptive Nearby Discovery (Section 10)",
+      "item": [
+        {
+          "name": "Discover Nearby Aggregators (Radius Expansion) [Positive]",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{farmerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/discovery/nearby?target_role=local_aggregator&latitude=28.7041&longitude=77.1025", "host": ["{{baseUrl}}"], "path": ["discovery", "nearby"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. ₹100 Value Distribution & Market Prices",
+      "item": [
+        {
+          "name": "Get ₹100 Value Distribution [Positive]",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/value-distribution", "host": ["{{baseUrl}}"], "path": ["value-distribution"] }
+          }
+        },
+        {
+          "name": "Get Live Market Index Mandi Prices [Positive]",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/market-prices?region=Punjab", "host": ["{{baseUrl}}"], "path": ["market-prices"] }
+          }
+        }
+      ]
+    }
+  ]
+}

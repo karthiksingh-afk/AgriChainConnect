@@ -1,0 +1,384 @@
+/* public/styles/components.css */
+
+/* =========================================================================
+   1. ORDER STATUS TRACKING BAR (PRD Section 12)
+   6 Stages: Order Placed -> Confirmed -> Packed -> Shipped -> Out for Delivery -> Delivered
+   ========================================================================= */
+.status-tracker-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-glass);
+}
+
+.tracker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.tracker-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.tracker-line {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  z-index: 1;
+}
+
+.tracker-line-progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+  transition: width 0.4s ease-in-out;
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.step-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: default;
+}
+
+.node-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.step-node.completed .node-circle {
+  background: var(--primary);
+  border-color: var(--primary-light);
+  color: #fff;
+  box-shadow: 0 0 14px var(--primary-glow);
+}
+
+.step-node.current .node-circle {
+  background: #0f172a;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  box-shadow: 0 0 16px var(--accent-gold-glow);
+  animation: pulseGlow 2s infinite;
+}
+
+.node-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 90px;
+}
+
+.step-node.completed .node-title { color: var(--text-main); }
+.step-node.current .node-title { color: var(--accent-gold); font-weight: 700; }
+
+.node-time {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   2. NEGOTIATION & COUNTER-OFFER COMPONENT (PRD Section 5.2)
+   ========================================================================= */
+.negotiation-panel {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+}
+
+.chat-history {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+.offer-bubble {
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  max-width: 85%;
+  border: 1px solid var(--border-glass);
+  animation: fadeIn 0.25s ease-out;
+}
+
+.offer-bubble.sent {
+  align-self: flex-end;
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.offer-bubble.received {
+  align-self: flex-start;
+  background: rgba(30, 41, 59, 0.7);
+}
+
+.bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.bubble-terms {
+  display: flex;
+  gap: 1.25rem;
+  margin: 0.5rem 0;
+  font-family: 'Outfit', sans-serif;
+}
+
+.term-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.term-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; }
+.term-val { font-size: 1.25rem; font-weight: 700; color: #fff; }
+
+.bubble-msg {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+.bubble-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.counterparty-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* =========================================================================
+   3. WALLET & ESCROW / CASH DUAL-FLOW (PRD Section 5.1)
+   ========================================================= */
+.wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.wallet-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-glass);
+}
+
+.wallet-badge-funded { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.wallet-badge-held { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.wallet-badge-disputed { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+.cash-mismatch-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  color: #fca5a5;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* =========================================================================
+   4. AI ROUTE RECOMMENDATION CARD (PRD Section 8)
+   ========================================================= */
+.route-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-glass);
+  position: relative;
+  overflow: hidden;
+}
+
+.route-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent-gold) 50%, var(--accent-blue) 100%);
+}
+
+.route-chain-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.route-node-pill {
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.route-node-pill.skipped {
+  text-decoration: line-through;
+  opacity: 0.5;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  cursor: pointer;
+}
+
+.route-node-pill.recommended {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--primary);
+  color: #34d399;
+  box-shadow: 0 0 16px var(--primary-glow);
+}
+
+.profit-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+.profit-comparison-table th, .profit-comparison-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.profit-comparison-table th {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.profit-gain-highlight {
+  color: #34d399;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* =========================================================================
+   5. ADAPTIVE NEARBY DISCOVERY (PRD Section 10)
+   ========================================================= */
+.radius-expansion-alert {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.25rem;
+  color: #93c5fd;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+}
+
+.nearby-member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.member-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: var(--transition);
+}
+
+.member-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-focus);
+}
+
+/* =========================================================================
+   6. ₹100 VALUE DISTRIBUTION TRANSPARENCY PANEL (PRD Section 6)
+   ========================================================= */
+.transparency-bar {
+  height: 24px;
+  border-radius: var(--radius-full);
+  display: flex;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.segment-farmer { background: #10b981; }
+.segment-aggregator { background: #f59e0b; }
+.segment-wholesaler { background: #0ea5e9; }
+.segment-processor { background: #a855f7; }
+.segment-distributor { background: #ec4899; }
+.segment-retailer { background: #3b82f6; }
+
+.tier-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.tier-legend-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glass);
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.tier-legend-item.highlighted {
+  border: 2px solid var(--primary);
+  background: rgba(16, 185, 129, 0.12);
+  box-shadow: 0 0 15px var(--primary-glow);
+}

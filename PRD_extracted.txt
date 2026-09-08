@@ -1,0 +1,1237 @@
+🌾
+
+AgriChain Connect
+
+End-to-End Digital Agricultural Supply Chain Platform
+
+Product Requirements Document (PRD)
+
+Version 1.0
+
+Prepared: September 2026
+
+Status: Draft for Review
+
+Table of Contents
+
+1. Executive Summary
+
+AgriChain Connect is an end-to-end digital marketplace and supply chain operating system that digitizes the traditional agricultural trade chain: Farmer → Local Aggregator → Wholesaler → Processor/Manufacturer → Distributor → Retailer. The platform gives every participant in this chain expanded market access, price transparency, secure payments, and AI-assisted route optimization — with the explicit goal of increasing the price realization for upstream sellers (farmers, aggregators) while reducing inefficiency, risk, and predatory practices across the chain.
+
+Each of the six supply chain roles gets a purpose-built interface reflecting their actual buying/selling behavior — for example, a Farmer only sells, while an Aggregator, Wholesaler, and Distributor both buy and sell. The platform is multilingual (English, Hindi, Punjabi, Marathi), supports escrow-based and cash-based payments, includes a negotiation/counter-offer system, and enforces transparency through a mandatory ₹100 value-distribution disclosure visible to all roles.
+
+1.1 Problem Statement
+
+Farmers and small aggregators are structurally price-takers with little visibility into downstream margins or alternative buyers.
+
+Multiple manual, cash-heavy intermediary layers add cost and delay without adding proportional value.
+
+Trust and payment risk (delayed payments, predatory load rejections, price renegotiation at the gate) are widespread and unaddressed by any centralized reputation system.
+
+Language and digital literacy barriers exclude a large share of rural users from existing agri-tech platforms.
+
+There is no dynamic, data-driven way to identify when a traditional intermediary tier should be bypassed in favor of a more efficient, trustworthy, better-paying node.
+
+1.2 Solution Summary
+
+A single mobile/web application with six role-specific dashboards mapped 1:1 to the real-world supply chain roles.
+
+A trust score system (0–100) computed from payment reliability, fulfillment behavior, punctuality, and peer reviews, gating who the AI routing engine will recommend.
+
+An AI Route Optimization Engine that can skip a low-trust or below-market-price intermediary tier and route the transaction directly to the next healthy tier.
+
+Escrow wallet, UPI/bank transfer, and logged cash payments, plus a structured negotiation and counter-offer workflow between any two connected parties.
+
+A ₹100 value-distribution transparency panel shown identically (with role-relevant highlighting) across all six interfaces.
+
+Adaptive nearby-member discovery with automatic radius expansion so a user is never shown "no members found."
+
+Full support for English, Hindi, Marathi, and Punjabi from first launch, with language persisted to the user's account.
+
+2. Goals & Success Metrics
+
+2.1 Business Goals
+
+Increase the share of final consumer price captured by farmers and aggregators by providing direct-access alternatives to inefficient intermediaries.
+
+Reduce transaction disputes and payment delays through escrow and trust scoring.
+
+Achieve high platform trust and repeat usage across all six role types, not just farmers.
+
+Build a defensible data asset (transaction history, trust scores, live price index) that improves routing quality over time.
+
+2.2 Success Metrics (illustrative — to be finalized with stakeholders)
+
+Metric
+
+Target Direction
+
+Measured By
+
+Farmer/Aggregator realized price vs. local mandi price
+
+↑ Increase
+
+Transaction price vs. live market index
+
+% of transactions using escrow or digital payment
+
+↑ Increase
+
+Payment method logs
+
+Average Trust Score across active users
+
+↑ Increase over time
+
+Trust Score engine
+
+% of routes using Skip-Node bypass with positive net profitability
+
+Tracked, optimized
+
+Route Optimization Engine logs
+
+Payment dispute rate
+
+↓ Decrease
+
+Escrow/dispute tickets
+
+Time-to-fulfillment (order placed → delivered)
+
+↓ Decrease
+
+Order status tracking timestamps
+
+Monthly active users per role
+
+↑ Increase, balanced across roles
+
+App analytics
+
+2.3 Non-Goals (Out of Scope for v1)
+
+Consumer-facing retail e-commerce (end consumers buying from the Final Retailer are out of scope; the platform covers B2B trade up to and including the Retailer's procurement side).
+
+Cross-border/export trade flows.
+
+Crop insurance, lending, or credit-scoring products (may be future extensions built on top of Trust Score).
+
+IoT/cold-chain sensor integration (may be a future enhancement to Order Status Tracking).
+
+3. User Roles & Supply Chain Overview
+
+The platform supports exactly six registered roles, mapped to the real-world agricultural supply chain. Every account is permanently tagged with one role at registration; the backend — not the frontend — is the source of truth for a user's role on every subsequent login (see Section 8, Authentication & Role Persistence).
+
+#
+
+Role
+
+Buys?
+
+Sells?
+
+Core Value Added
+
+Typical Margin
+
+1
+
+Farmer (Producer)
+
+No
+
+Yes
+
+Cultivation, harvesting, initial sorting
+
+Low–Moderate
+
+2
+
+Local Aggregator
+
+Yes
+
+Yes
+
+Local transport, volume aggregation, cash advance to farmers
+
+Low per unit, volume-driven
+
+3
+
+Wholesaler / Trader
+
+Yes
+
+Yes
+
+Bulk storage, regional transport, price risk management
+
+Moderate, speculative
+
+4
+
+Processor / Manufacturer
+
+Yes
+
+Yes
+
+Refining, processing, packaging, QC, branding
+
+High
+
+5
+
+Distributor / Logistics Partner
+
+Yes
+
+Yes
+
+Last-mile transport, regional warehousing, tracking
+
+Low–Moderate
+
+6
+
+Final Retailer
+
+Yes
+
+No (sells to end consumer, out of platform scope)
+
+Consumer convenience, merchandising
+
+Moderate–High
+
+Design implication: Farmer and Final Retailer are single-sided (sell-only / buy-only respectively) within the platform's B2B scope. Aggregator, Wholesaler, Processor, and Distributor are dual-sided (they both procure from an upstream tier and sell to a downstream tier), and their interfaces must support both an incoming-supply view and an outgoing-sales view, often simultaneously.
+
+4. Role-Specific UI/UX Requirements
+
+Each of the six roles receives a distinct dashboard and navigation structure after login. All six interfaces share a common design system, the multilingual shell, the Trust Score badge, the escrow/payment components, the negotiation module, and the ₹100 value-distribution transparency widget (see Sections 5–7) — but the home dashboard, primary actions, and listing/procurement flows differ by role as detailed below. These will be translated into visual designs in Stitch once this structure is confirmed.
+
+4.1 Farmer (Sell-Only Interface)
+
+The Farmer never buys on the platform. Every screen is oriented around listing crops, receiving and comparing offers, and getting paid.
+
+Dashboard — Key Widgets
+
+"My Crops" — active listings with quantity, quality grade, asking price, and status (Available / Offer Received / Sold / Delivered)
+
+Live Market Price ticker for the farmer's crop(s) and region
+
+Trust Score badge (own score) + quick tips to improve it
+
+Nearby Buyers/Aggregators map card (Adaptive Nearby Member Discovery)
+
+Escrow Wallet balance + "Pending Release" amount
+
+Order Status Tracking bar for any crop currently in transit
+
+Primary User Flows
+
+List a new crop for sale (crop type, quantity, harvest date, quality photos, asking price, location, pickup availability).
+
+Receive offers from nearby Aggregators/Wholesalers → compare offers side-by-side → negotiate/counter-offer → accept.
+
+View AI-suggested optimal buyer (with reason: trust score, price, distance) via Route Optimization.
+
+Track order status from Confirmed through Delivered.
+
+Request escrow release or log a cash payment received.
+
+Rate the buyer post-transaction (feeds buyer's Trust Score).
+
+Key Screens
+
+Home / My Crops
+
+New Listing (multi-step form)
+
+Offers Inbox (with negotiation thread)
+
+Nearby Buyers (map + list, distance-ranked)
+
+Order Tracking
+
+Wallet & Payments
+
+My Trust Score & Reviews
+
+Profile & Language Settings
+
+Role-Specific Notes
+
+No "Browse to Buy" navigation item exists anywhere in this role's UI — it is intentionally absent, not just hidden, to keep the interface simple for low digital-literacy users.
+
+Should support voice-assisted / large-icon input for crop listing given rural, potentially low-literacy users.
+
+4.2 Local Aggregator (Buy + Sell Interface)
+
+Buys in small volumes from many farmers, pools stock, and sells in bulk to Wholesalers or directly to Processors when the AI engine recommends a skip.
+
+Dashboard — Key Widgets
+
+Split dashboard: "Procurement" (buy-side) and "Sales" (sell-side) tabs
+
+Aggregated Stock Pool — live inventory pooled from multiple farmer purchases, by crop/grade
+
+AI Route Optimization card showing recommended next buyer with justification
+
+Trust Score badge (own) + visible trust scores of farmers/buyers being evaluated
+
+Escrow wallet with separate "Payable to Farmers" and "Receivable from Buyers" ledgers
+
+Primary User Flows
+
+Browse nearby Farmer listings (distance-ranked) → make offers/counter-offers → purchase → pay farmer (escrow/UPI/cash-logged).
+
+Pool purchased stock into batches by crop and grade.
+
+List pooled batches for sale to Wholesalers/Processors/Distributors.
+
+View AI-recommended route: sell to standard next tier (Wholesaler) or skip to a healthier node (e.g., Processor) with stated reason and profitability comparison.
+
+Track two concurrent order pipelines: incoming from farmers, outgoing to next tier.
+
+Key Screens
+
+Home (Procurement / Sales toggle)
+
+Nearby Farmers (map + list)
+
+Purchase Offers & Negotiation
+
+Stock Pool / Inventory
+
+Create Sale Listing
+
+AI Route Recommendations
+
+Order Tracking (dual: inbound & outbound)
+
+Wallet & Payments (dual ledger)
+
+Trust Score & Reviews
+
+4.3 Wholesaler / Large-Scale Trader (Buy + Sell Interface)
+
+Operates at regional market scale — buys bulk from Aggregators, stores/warehouses, and sells onward to Processors or Distributors based on price movement.
+
+Dashboard — Key Widgets
+
+Warehouse/Storage inventory dashboard with capacity utilization
+
+Live Market Index Price chart (for speculation/timing decisions)
+
+Procurement pipeline (from Aggregators) and Sales pipeline (to Processors/Distributors)
+
+AI Route Optimization card for outbound sales
+
+Escrow wallet, dual ledger, Trust Score badge
+
+Primary User Flows
+
+Browse/receive offers from nearby Aggregators → negotiate → purchase in bulk.
+
+Manage warehouse storage: log stock in, track spoilage risk/age, decide hold vs. sell timing against the live price index.
+
+List bulk stock for sale to Processors or Distributors; negotiate and accept offers.
+
+View AI-recommended optimal downstream buyer with reasoning.
+
+Track multi-shipment logistics for both inbound and outbound orders.
+
+Key Screens
+
+Home (Procurement / Storage / Sales tabs)
+
+Nearby Aggregators (map + list)
+
+Warehouse & Storage Management
+
+Market Price Index & Trends
+
+Create Sale Listing / Offers
+
+AI Route Recommendations
+
+Order Tracking (dual)
+
+Wallet & Payments
+
+Trust Score & Reviews
+
+4.4 Processor / Manufacturer (Buy + Sell Interface)
+
+Buys raw material from Wholesalers/Aggregators and sells finished, packaged/branded goods to Distributors. This role has the added dimension of a manufacturing/processing step between purchase and sale.
+
+Dashboard — Key Widgets
+
+Raw Material Procurement dashboard (by crop, grade, supplier)
+
+Processing/Production status board (Raw → In Process → Packaged/Finished)
+
+Finished Goods Catalog (SKU-level, for sale to Distributors)
+
+AI Route Optimization for both raw material sourcing and finished goods distribution
+
+Escrow wallet, dual ledger, Trust Score badge
+
+Primary User Flows
+
+Source raw material from nearby Wholesalers/Aggregators (with AI-recommended supplier) → negotiate → purchase.
+
+Track internal processing stages (this may be a lightweight status field, not full MES/ERP functionality, for v1).
+
+Create/manage finished-goods SKU listings with packaging, branding, and pricing.
+
+Receive and negotiate orders from Distributors; fulfill and ship.
+
+View AI-recommended distribution route.
+
+Key Screens
+
+Home (Sourcing / Processing / Sales tabs)
+
+Nearby Wholesalers/Aggregators (raw material sourcing)
+
+Processing/Production Status
+
+Finished Goods Catalog
+
+Distributor Orders & Negotiation
+
+AI Route Recommendations
+
+Order Tracking (dual)
+
+Wallet & Payments
+
+Trust Score & Reviews
+
+4.5 Distributor / Logistics Partner (Buy + Sell Interface)
+
+Buys packaged goods in bulk from Processors and manages last-mile logistics to Retailers across a region.
+
+Dashboard — Key Widgets
+
+Bulk Procurement dashboard (from Processors)
+
+Regional Warehousing & Route Planning map
+
+Retailer Order Board (incoming orders from multiple retailers)
+
+AI Route Optimization for cost-efficient distribution
+
+Escrow wallet, dual ledger, Trust Score badge
+
+Primary User Flows
+
+Browse/negotiate bulk purchase from nearby Processors.
+
+Plan regional warehousing and delivery routes across served Retailers.
+
+Receive and fulfill orders from multiple Retailers simultaneously.
+
+Track outbound multi-drop delivery status per retailer order.
+
+View AI-recommended sourcing route from Processors.
+
+Key Screens
+
+Home (Procurement / Distribution tabs)
+
+Nearby Processors (map + list)
+
+Regional Warehouse & Route Planning
+
+Retailer Order Board
+
+AI Route Recommendations
+
+Order Tracking (dual, multi-drop)
+
+Wallet & Payments
+
+Trust Score & Reviews
+
+4.6 Final Retailer (Buy-Only Interface)
+
+Buys inventory from Distributors to sell to end consumers. End-consumer sale itself is outside the platform's scope — this role's platform interface is buy-only, mirroring the Farmer's sell-only interface.
+
+Dashboard — Key Widgets
+
+"My Orders" — active purchase orders from Distributors with status
+
+Nearby Distributors map card (Adaptive Nearby Member Discovery)
+
+Restock Suggestions (based on past order patterns — simple, non-AI for v1 unless prioritized)
+
+Escrow wallet (payable to Distributors)
+
+Trust Score badge (own) + visibility into Distributor trust scores
+
+Primary User Flows
+
+Browse nearby Distributors' available stock → negotiate/counter-offer → place purchase order.
+
+Track order status from Confirmed through Delivered.
+
+Pay via escrow/UPI/logged cash.
+
+Rate the Distributor post-delivery.
+
+View the ₹100 value-distribution panel to understand their position in the chain's economics.
+
+Key Screens
+
+Home / My Orders
+
+Browse Nearby Distributors (map + list)
+
+Negotiation & Offers
+
+Order Tracking
+
+Wallet & Payments
+
+My Trust Score & Reviews
+
+Profile & Language Settings
+
+Role-Specific Notes
+
+No "Create Listing to Sell" navigation exists in this role's UI, mirroring the Farmer's sell-only constraint.
+
+4.7 Shared UI Components (Present in All Six Interfaces)
+
+Global navigation shell with role-appropriate tabs only (no dead/greyed-out tabs for actions the role can't perform).
+
+Language switcher (persists to profile).
+
+Trust Score badge and detail view.
+
+Negotiation/counter-offer thread component, reusable in any buy or sell context.
+
+Wallet & Payments module (escrow, UPI/bank, cash-logging).
+
+Order Status Tracking bar.
+
+₹100 Value Distribution transparency panel.
+
+Adaptive Nearby Member Discovery map/list component (used differently depending on whether the role is searching upstream or downstream).
+
+5. Payments, Escrow & Negotiation
+
+5.1 Payment Methods
+
+Method
+
+Description
+
+Key Requirements
+
+Escrow Wallet
+
+Platform holds buyer's funds after order confirmation and releases to seller upon agreed trigger (e.g., delivery confirmation or inspection window expiry).
+
+Configurable hold period; auto-release rules; dispute-hold capability; full ledger per transaction.
+
+UPI / Bank Transfer
+
+Direct digital transfer between buyer and seller, tracked by the platform for record-keeping and Trust Score input.
+
+Integration with a payment gateway supporting UPI and NEFT/IMPS/RTGS; transaction reference capture.
+
+Cash Payment (Logged)
+
+Physical cash exchanged off-platform, but both parties must record and confirm it in-app.
+
+Both buyer and seller must independently confirm the cash amount and date in-app before the order is marked Paid; mismatches flagged for review.
+
+5.1.1 Escrow Wallet — Functional Detail
+
+Buyer funds the escrow wallet when placing/accepting an order (or a deposit percentage, if partial escrow is supported).
+
+Funds are held in escrow through the order lifecycle (see Section 9, Order Status Tracking).
+
+Release trigger: automatic on "Delivered" confirmation by buyer, OR manual release by buyer, OR automatic release after a configurable inspection window (e.g., 48 hours) with no dispute raised.
+
+If a dispute is raised before release, funds remain held pending resolution (dispute-resolution workflow to be defined in a future phase).
+
+All escrow events (funded, held, released, disputed, refunded) are logged and visible to both parties and factored into the Payment Reliability & Speed pillar of the Trust Score.
+
+5.1.2 Cash Payment Logging
+
+Seller marks "Cash Payment Received" with amount and date.
+
+Buyer must confirm the same amount and date.
+
+If both confirmations match, the order is marked Paid; if they mismatch, the order is flagged for both parties to resolve, and repeated mismatches negatively affect Trust Score.
+
+Cash-paid orders still appear in the ₹100 value-distribution and transaction history for transparency purposes, but carry a "Cash — Self-Reported" indicator.
+
+5.2 Negotiation & Counter-Offer System
+
+Every buy/sell relationship on the platform — Farmer↔Aggregator, Aggregator↔Wholesaler, Wholesaler↔Processor, Processor↔Distributor, Distributor↔Retailer — supports structured negotiation, not just accept/reject.
+
+5.2.1 Negotiation Flow
+
+Seller creates a listing with an asking price (per unit) and quantity.
+
+Buyer views listing and either (a) accepts at asking price, or (b) submits a counter-offer with proposed price, quantity, and optional message/pickup terms.
+
+Seller can accept the counter-offer, reject it, or submit a further counter-offer. This continues as a threaded negotiation with full history retained.
+
+Either party can set an expiry on an offer (e.g., valid for 6 hours) given the perishability of agricultural goods.
+
+Once accepted, the offer converts into a confirmed order and enters the Order Status Tracking flow (Section 9).
+
+5.2.2 Negotiation UI Requirements
+
+Threaded, chat-like interface showing full offer/counter-offer history with timestamps.
+
+Live comparison against the Live Market Index Price so both parties can see if an offer is above/below market.
+
+Visible Trust Score of the counterparty at every step of the negotiation.
+
+Push/in-app notification on every new counter-offer or expiring offer.
+
+6. ₹100 Value Distribution Transparency Feature
+
+To build trust and demonstrate fairness, every one of the six role interfaces must display a standardized panel showing how ₹100 of final consumer value is distributed across all six supply chain tiers for the relevant crop/product category. This is a platform-wide transparency commitment, not a per-role customization.
+
+6.1 Requirements
+
+The ₹100 breakdown must be shown using the same underlying dataset across all six interfaces — a Farmer and a Retailer looking at the same crop category should see identical numbers.
+
+Values should be computed from actual platform transaction data where available (per crop category / region), falling back to published market/industry benchmark data where platform data is insufficient.
+
+The panel should visually highlight the viewing user's own tier (e.g., a Farmer's panel highlights the "Farmer" segment) while still showing all six segments for context.
+
+Should be filterable by crop/product category, since distribution varies (e.g., fresh produce vs. processed goods).
+
+Should be accessible from the dashboard at all times, not buried in settings — this is a core trust-building feature.
+
+6.2 Illustrative Example (Sample Data — Not Final)
+
+Tier
+
+Share of ₹100
+
+What Drives This Share
+
+Farmer
+
+₹28
+
+Cultivation, harvesting, initial sorting
+
+Local Aggregator
+
+₹7
+
+Local transport, aggregation, cash advance
+
+Wholesaler / Trader
+
+₹12
+
+Storage, regional transport, price risk
+
+Processor / Manufacturer
+
+₹25
+
+Processing, packaging, QC, branding
+
+Distributor
+
+₹10
+
+Last-mile logistics, warehousing
+
+Final Retailer
+
+₹18
+
+Overhead, merchandising, consumer convenience
+
+Note: These figures are illustrative placeholders for the PRD only. Actual percentages must be sourced from real transaction data post-launch and/or agricultural economics research per crop category, and should be reviewed with domain/agri-economics stakeholders before being shown to users.
+
+7. Multilingual Support (English / Hindi / Punjabi / Marathi)
+
+7.1 Requirements
+
+All four languages — English, हिंदी (Hindi), ਪੰਜਾਬੀ (Punjabi), मराठी (Marathi) — must be supported at first launch, not added post-launch.
+
+Language selection is the very first screen a new user sees, before role selection (see Section 8).
+
+Selected language is stored on the user's account (`preferred_language` field) and restored automatically on every future login, on any device.
+
+All UI copy, notifications, form labels, error messages, and AI-generated route/trust explanations must be localized — not just static labels.
+
+Numeric, date, and currency formatting should follow locale conventions where they differ.
+
+Users can change their language at any time from Profile & Settings, without losing session data or requiring re-registration.
+
+Voice input/output should be considered for the Farmer and Retailer interfaces in a future phase, given literacy variance across rural users — flagged here as a recommended enhancement, not a v1 hard requirement unless prioritized by stakeholders.
+
+7.2 Localization Scope by Content Type
+
+Content Type
+
+Localization Required?
+
+Notes
+
+Static UI labels/buttons/navigation
+
+Yes — v1
+
+Standard i18n string tables
+
+Form field labels & validation errors
+
+Yes — v1
+
+Includes registration, listing, offer forms
+
+Push/in-app notifications
+
+Yes — v1
+
+Especially offer/negotiation and order status alerts
+
+AI Route Optimization explanations
+
+Yes — v1
+
+Justification text must be generated/translated per user's language
+
+Trust Score pillar descriptions
+
+Yes — v1
+
+User-generated content (listing descriptions, chat messages)
+
+No auto-translate in v1 (optional future enhancement)
+
+Consider machine translation as a v2 feature
+
+8. AI Route Optimization Engine
+
+The AI Route Optimization Engine dynamically maps the most profitable, secure, and efficient transaction path for an upstream seller (Farmer, Aggregator, Wholesaler, Processor) to a downstream buyer, skipping inefficient or high-risk intermediary tiers when justified. Retailer and end consumer are out of scope for routing recommendations (Retailer is a terminal buy-only node).
+
+8.1 Baseline Chain Structure
+
+Farmer → Aggregator → Wholesaler → Processor → Distributor  (Retailer and end consumer are outside the routing engine's scope.)
+
+8.2 Dynamic Node Evaluation Logic
+
+For every transaction step, the engine evaluates the immediate next sequential tier (Node N+1) against three strict, ordered filtering constraints:
+
+#
+
+Constraint
+
+Check
+
+Pass Condition
+
+1
+
+Availability Check
+
+Does a verified buyer exist at the next tier within a viable geographic/logistics radius?
+
+Yes
+
+2
+
+Trust Score Threshold
+
+Does the buyer meet the platform's minimum required Trust Score?
+
+≥ 4.0 / 5.0 (≥ 80 / 100)
+
+3
+
+Market Price Fairness
+
+Is the buyer's offered price within acceptable variance of the Live Market Index Price?
+
+No lower than −5% of market average
+
+8.3 Skip-Node Routing Rules
+
+8.3.1 Standard Route
+
+If the next sequential tier passes all three checks, the engine routes the transaction to that tier normally — no bypass.
+
+8.3.2 Skip-Node Route (Bypass Protocol)
+
+If the next sequential tier fails any one of the three checks (unavailable, low trust, or predatory/low pricing), the engine triggers the Bypassing Protocol.
+
+The failing tier is completely dropped from the recommended route, and the engine recalculates logistics directly to the next healthy tier (Node N+2).
+
+Example: If an Aggregator's nearby Wholesaler network has poor trust scores or below-market buy rates, the engine recalculates transport/logistics cost and redirects the recommended sale directly to a verified Processor, skipping the Wholesaler tier entirely.
+
+If Node N+2 also fails, the engine continues evaluating Node N+3, and so on, until a passing node is found or the chain is exhausted (in which case the standard route is shown with a warning, not silently withheld).
+
+8.4 Output Generation Requirements
+
+For a given user and transaction context, the engine must output all three of the following:
+
+The Optimized Route — the exact sequential chain of entities the user is recommended to sell to (or buy from), from current tier to the recommended destination tier.
+
+Skipped Nodes Justification — a clear, plain-language, localized reason for every bypassed tier (e.g., "Wholesaler skipped due to low price anomaly — offered price was 9% below the live market index, exceeding the −5% threshold.")
+
+Net Profitability Analysis — a side-by-side comparison showing that the recommended direct route covers any extra transport/logistics cost incurred by skipping a tier and yields a higher net return than the standard route through the unhealthy node.
+
+8.5 UI Requirements for Route Recommendations
+
+Displayed as a dedicated "AI Route Recommendations" card/screen within the dashboards of Farmer, Aggregator, Wholesaler, Processor, and Distributor (the five roles that sell to a next tier).
+
+Route shown as a visual chain/path (e.g., You → [Skipped: Wholesaler] → Processor), with the skipped tier visually struck through or marked, not simply omitted, so the user understands why.
+
+Net Profitability Analysis shown as a simple comparison table or chart: Standard Route Net Return vs. Optimized Route Net Return, including transport cost deltas.
+
+Tapping a skipped node reveals the specific justification text and the underlying failed constraint(s).
+
+User retains full control — the AI recommendation is advisory; the user can still choose to sell to the standard next-tier node manually if they prefer.
+
+All route/justification text must be localized per Section 7.
+
+8.6 Data Dependencies
+
+Live Market Index Price feed, per crop/product category and region.
+
+Real-time buyer availability within an expandable geographic radius (shared logic with Adaptive Nearby Member Discovery, Section 10).
+
+Live Trust Scores for all candidate nodes (Section 9).
+
+Logistics/transport cost estimation model to support the Net Profitability Analysis.
+
+9. Trust Score System
+
+Every registered user, regardless of role, has a single Trust Score that is computed continuously from platform transaction data. It is the primary risk/quality signal used by the AI Route Optimization Engine and is visible to any counterparty considering a transaction.
+
+9.1 Scale & Threshold
+
+Scale: 0 to 100 points, also displayed as 0.0 to 5.0 stars for readability.
+
+System default threshold: 80 points (4.0 stars).
+
+Any user falling below the threshold is automatically flagged "High Risk" and is bypassed by the Route Optimization Engine's recommendations (though not blocked from the platform entirely — they can still transact, just without being the AI's recommended route).
+
+9.2 The Four Core Pillars
+
+Pillar
+
+Weight
+
+Metric
+
+Score Impact
+
+Payment Reliability & Speed
+
+35%
+
+Time taken to release funds once goods are accepted
+
+Full points for instant escrow release or payment within agreed terms (e.g., Net 0–3 days); deductions for disputes, delayed transfers, or bounced payments
+
+Order Fulfillment & Rejection Rate
+
+25%
+
+Frequency of arbitrary cancellations or unfair crop rejections
+
+Full points for accepting loads meeting pre-agreed quality standards; heavy penalties for predatory gate rejections used to force last-minute price drops
+
+Operational Punctuality
+
+20%
+
+Adherence to scheduled pick-up/drop-off timelines
+
+High score for on-time arrival within the allocated window; deductions for stranding cargo or delaying trucks, risking spoilage
+
+Community Peer Reviews
+
+20%
+
+Direct 1–5 star ratings from other verified users post-transaction
+
+Dynamic average covering professionalism, communication, and transparency
+
+9.3 Functional Requirements
+
+Trust Score recalculates after every completed transaction (or on a rolling/batched basis, e.g., nightly — implementation detail for engineering, but must reflect data within 24 hours).
+
+Score history should be viewable by the user themselves (trend over time), with pillar-level breakdown so users understand what to improve.
+
+Counterparties see the aggregate score/star rating and pillar summary of any user they are negotiating or transacting with — full granular history is private to the account owner.
+
+New users start with a neutral/provisional score (exact starting value and "cold start" handling to be defined with data/eng team) and a visible "New Member" indicator until a minimum transaction count is reached.
+
+"High Risk" flag is visible on the user's profile card wherever it is shown platform-wide (negotiation threads, nearby-member lists, route recommendations).
+
+Peer reviews (Pillar 4) can only be submitted by users who completed an actual transaction with the reviewed party, to prevent fake/retaliatory reviews.
+
+10. Smart Nearby Member Location & Adaptive Discovery
+
+Feature name: Adaptive Nearby Member Discovery. The platform uses the requesting user's location to identify and display the nearest available members in the relevant next (or previous) supply-chain tier — transporters, buyers, warehouses, cold storage providers, or other relevant chain members — with automatic radius expansion so a user is never shown a dead-end "No members found" result.
+
+10.1 Core Logic
+
+Nearby Members First: the system searches for available, qualifying members within a predefined nearby radius (e.g., 10 km — exact default to be tuned per region density).
+
+Smart Radius Expansion: if no suitable member is available nearby, the system automatically expands the search radius in steps (e.g., 10 km → 25 km → 50 km → beyond) until qualifying members are found.
+
+Distance-Based Ranking: all returned members are ranked nearest-to-farthest so the user can weigh convenience against other factors (price, trust score).
+
+Availability Check: only members who are currently marked available and capable of handling the specific crop/request/volume are shown.
+
+Location Transparency: the user can view the approximate distance and location of each recommended member before selecting one.
+
+10.2 Example
+
+If no transporter or buyer is available within 10 km, the system automatically expands the search to 25 km, then 50 km, and beyond — always surfacing the nearest available options instead of returning an empty result.
+
+10.3 UI Requirements
+
+Combined map + list view: pins on a map plus a scrollable, distance-sorted list, each entry showing name, role, distance, Trust Score, and availability status.
+
+Clear visual indicator when the system has expanded beyond the default radius (e.g., "Showing results up to 45 km — no closer matches available") so users understand why farther options appear.
+
+Filter/sort controls: by distance, Trust Score, or price where applicable.
+
+Reused across all relevant flows: Farmer finding buyers, Aggregator/Wholesaler/Processor/Distributor finding both upstream suppliers and downstream buyers, and Retailer finding Distributors.
+
+10.4 Data Dependencies
+
+User-level geolocation (opt-in, with manual address fallback for users who decline device location access).
+
+Live availability status per member (must be kept current — e.g., via an active/inactive toggle or automatic timeout).
+
+Shared with the AI Route Optimization Engine's Availability Check constraint (Section 8.2).
+
+11. Onboarding, Authentication & Role Persistence
+
+A simple, linear onboarding flow: Language Selection → Role Selection → Login/Register → Role-Specific Dashboard. The user's role is selected once at registration and permanently persisted server-side against their account; it is never re-requested or re-derived from the frontend on subsequent logins.
+
+11.1 Step 1 — Language Selection
+
+First screen on first app open: four large buttons — हिंदी (Hindi), English, मराठी (Marathi), ਪੰਜਾਬੀ (Punjabi).
+
+Selection becomes the user's preferred language immediately and is applied to all subsequent screens, including this same onboarding flow.
+
+User is auto-navigated to Role Selection after choosing a language.
+
+11.2 Step 2 — Supply Chain Role Selection
+
+Six large, clearly labeled role cards: Farmer, Local Aggregator, Wholesaler, Manufacturer (Processor), Distributor, Final Retailer.
+
+User selects exactly one role.
+
+Selected role is carried forward temporarily to the Login/Register screen (pre-filling the Role field on the registration form).
+
+11.3 Step 3 — Login / Registration
+
+The authentication screen offers Login or Register / Create Account. New users must register before accessing the app.
+
+11.3.1 Registration — Required Fields
+
+Field
+
+Notes
+
+Full Name
+
+Required
+
+Username
+
+Required; must be unique platform-wide; primary user-facing identifier
+
+Password
+
+Required; never stored in plain text — securely hashed
+
+Mobile Number
+
+Required
+
+Supply Chain Role
+
+Auto-populated from Step 2, editable at registration only
+
+If the chosen username already exists, registration is rejected with: "Username already exists. Please choose another username," and the user is offered a clear path back to Login.
+
+The system must never create a duplicate account for an existing username.
+
+11.3.2 Login
+
+User authenticates with Username + Password.
+
+On invalid credentials, the system shows a generic error — "Invalid username or password. Please check your credentials and try again" — and must not reveal whether the username exists separately from whether the password was wrong (prevents username enumeration).
+
+11.4 Role Persistence & Security Requirement
+
+On every login, the backend retrieves the user's stored role from the database and routes them to the corresponding role-specific dashboard — the user is never asked to re-select their role.
+
+Critical security requirement: the frontend's role selection screen is used only during onboarding/registration and for navigation convenience. It must never be treated as proof of a user's identity or role for any authenticated action. All role-based access control decisions must be made server-side from the authenticated user's stored account record.
+
+11.5 User Data Model
+
+Field
+
+Type / Notes
+
+id
+
+Unique system identifier
+
+name
+
+Full name
+
+username
+
+Unique, user-facing identifier
+
+password_hash
+
+Securely hashed — never plain text
+
+mobile_number
+
+Contact number
+
+role
+
+Controlled enum: farmer, local_aggregator, wholesaler, manufacturer, distributor, final_retailer — not free text
+
+preferred_language
+
+en, hi, pa, mr
+
+created_at
+
+Timestamp
+
+updated_at
+
+Timestamp
+
+11.6 Key Functional Requirements
+
+ID
+
+Requirement
+
+FR-01
+
+The system shall allow users to select Hindi, English, Marathi, or Punjabi.
+
+FR-02
+
+The system shall allow users to select one of six supply chain roles.
+
+FR-03
+
+The system shall allow new users to register using name, username, password, and mobile number.
+
+FR-04
+
+Every username must be unique.
+
+FR-05
+
+Every registered account must have exactly one associated supply chain role.
+
+FR-06
+
+The user's selected role must be stored in the database and permanently associated with their account.
+
+FR-07
+
+The system shall authenticate users via username and password.
+
+FR-08
+
+After successful login, the backend shall retrieve the user's stored role automatically.
+
+FR-09
+
+The user's preferred language shall be stored with their account and restored on future sessions.
+
+FR-10
+
+The system shall prevent multiple accounts from sharing the same username.
+
+FR-11
+
+Passwords must never be stored as plain text; the system must securely hash/manage them.
+
+FR-12
+
+After authentication, users shall be directed to the dashboard and functionality corresponding to their registered role.
+
+12. Order Status Tracking
+
+A visual, real-time order status bar is displayed on the order details page for every order, letting Farmers and all other supply-chain members easily track progress at a glance.
+
+12.1 Order Status Flow
+
+Order Placed → Confirmed → Packed → Shipped/Dispatched → Out for Delivery → Delivered
+
+Example rendering: ✓ Order Placed → ✓ Confirmed → ✓ Packed → ● Shipped → ○ Out for Delivery → ○ Delivered
+
+12.2 Requirements
+
+The current stage is clearly highlighted; completed stages are visually marked (e.g., checkmark) so users can understand progress at a glance.
+
+The date and time of each status update is displayed.
+
+An estimated delivery date is shown when available.
+
+The progress bar updates automatically the moment the seller or delivery/logistics partner changes the order status — no manual refresh needed.
+
+Applies uniformly to every role's order views — a Farmer tracking a sale to an Aggregator sees the same style of bar as a Distributor tracking a delivery to a Retailer.
+
+Status changes should trigger localized push/in-app notifications to both parties.
+
+Escrow release logic (Section 5.1.1) and Trust Score's Operational Punctuality pillar (Section 9.2) both consume these status timestamps as inputs.
+
+13. Design & Prototyping Process
+
+Once this PRD's role-specific interface structure (Section 4) is confirmed by stakeholders, the visual UI for each of the six role dashboards — plus the shared components (Sections 5–10 and 12) — will be designed in Stitch. Suggested sequencing:
+
+Design the shared component library first: navigation shell, Trust Score badge, negotiation thread, wallet/payment module, order status bar, ₹100 transparency panel, nearby-member map/list.
+
+Design the Farmer and Final Retailer dashboards next, as the two single-sided (simplest) interfaces — useful for validating the shared components.
+
+Design the four dual-sided dashboards (Aggregator, Wholesaler, Processor, Distributor), reusing the buy-side and sell-side patterns established in step 2.
+
+Design the onboarding flow (language → role → login/register) and AI Route Recommendation screens last, since they depend on final visual language from the dashboards.
+
+All screens must be designed in at least English and Hindi to validate text-expansion/layout issues early, before Punjabi and Marathi are added.
+
+14. Assumptions, Open Questions & Risks
+
+14.1 Assumptions
+
+A reliable source for the Live Market Index Price (per crop/region) is available or will be built/sourced (e.g., government mandi price APIs, internal transaction-derived pricing).
+
+Users have (or can be onboarded onto) smartphones with basic data connectivity; the app should still degrade gracefully in low-connectivity rural areas.
+
+A payment gateway partner supporting UPI/NEFT/IMPS/RTGS and escrow-style fund holding is available for integration.
+
+Stitch will be used for high-fidelity UI design following sign-off on this PRD's structural requirements.
+
+14.2 Open Questions for Stakeholders
+
+What is the exact default "nearby radius" and expansion step sequence for Adaptive Nearby Member Discovery — should this vary by crop perishability or region (urban vs. rural density)?
+
+What is the dispute-resolution process when an escrow payment is disputed — manual platform arbitration, automated rules, or a hybrid?
+
+What is the "cold start" Trust Score for brand-new users, and how many transactions are needed before a score is considered reliable enough to be shown/used in routing?
+
+Should the ₹100 value-distribution figures be sourced live from platform transaction data from day one, or seeded with external benchmark data until sufficient platform data exists?
+
+Is voice input/output for low-literacy users an in-scope v1 requirement or a fast-follow v1.1 enhancement?
+
+What regulatory/compliance requirements apply to holding farmer/trader funds in an escrow wallet (e.g., RBI payment aggregator/escrow regulations in India)?
+
+14.3 Key Risks
+
+Risk
+
+Impact
+
+Mitigation Direction
+
+Low digital literacy among farmers slows adoption
+
+High
+
+Large-icon UI, voice input consideration, vernacular-first design, offline-friendly flows
+
+Sparse platform data in early regions makes AI routing and Trust Score unreliable
+
+High
+
+Seed with external market/benchmark data; clearly label low-confidence recommendations
+
+Regulatory complexity around escrow/payment holding
+
+High
+
+Early legal/compliance review; consider partnering with a licensed payment aggregator rather than building custody in-house
+
+Cash payment self-reporting enables fraud/mismatch disputes
+
+Medium
+
+Dual confirmation requirement; mismatch flags feed Trust Score penalties
+
+Four-language support increases design/QA surface area
+
+Medium
+
+Design in English + Hindi first to validate patterns before scaling to Punjabi/Marathi
+
+Network/connectivity issues in rural areas
+
+Medium
+
+Offline-tolerant listing creation with sync-on-reconnect; lightweight data payloads
+
+15. Suggested Phased Roadmap
+
+This is a suggested sequencing to reduce risk and validate core assumptions early; final prioritization should be confirmed with stakeholders.
+
+Phase 1 — Foundation
+
+Onboarding: Language selection, Role selection, Registration/Login, role persistence (Section 11).
+
+Farmer and Aggregator dashboards (the core upstream relationship).
+
+Basic listing, offer, and negotiation/counter-offer flow (Section 5.2).
+
+UPI/Bank transfer and cash-logging payments (escrow can follow in Phase 2 if needed to de-risk regulatory work).
+
+Order Status Tracking (Section 12).
+
+Phase 2 — Chain Expansion & Trust
+
+Wholesaler, Processor, and Distributor dashboards.
+
+Trust Score engine (Section 9), fed by Phase 1 transaction data.
+
+Escrow wallet (Section 5.1.1), pending compliance review.
+
+₹100 Value Distribution transparency panel (Section 6).
+
+Phase 3 — Intelligence Layer
+
+AI Route Optimization Engine (Section 8), once sufficient trust-score and price-index data exists to make recommendations meaningful.
+
+Adaptive Nearby Member Discovery with smart radius expansion (Section 10) — can be simplified (fixed radius) in Phase 1 and upgraded here.
+
+Phase 4 — Scale & Retailer
+
+Final Retailer dashboard and buy-only flows.
+
+Punjabi and Marathi language rollout (if English/Hindi launched first for speed).
+
+Enhancements: voice input, dispute-resolution workflow, richer analytics per role.
